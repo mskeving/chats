@@ -4,7 +4,7 @@ from app.models import Chat, Text
 db = app.db
 
 
-def consolidate_text(email):
+def consolidate_for_user(email):
     """ This takes all chats from `email` and consolidates them
     into one text field. This makes it easier to do full text searches.
 
@@ -30,10 +30,10 @@ def consolidate_text(email):
     print("Finished consolidating text for {}".format(email))
 
 
-if __name__ == "__main__":
+def consolidate_text():
     users = [
         "mskeving@gmail.com",
         "philrha@gmail.com",
     ]
     for u in users:
-        consolidate_text(u)
+        consolidate_for_user(u)

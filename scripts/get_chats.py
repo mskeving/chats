@@ -58,7 +58,8 @@ def commit_messages():
         print("failed to commit some chats: ", sys.exc_info()[0])
 
 
-def add_chats(query):
+def add(query):
+    print "hi"
     message_ids = get_message_ids(query)
 
     for i, msg_id in enumerate(message_ids):
@@ -99,11 +100,11 @@ def add_chats(query):
     print("finished query. {} new chats.".format(len(message_ids)))
 
 
-if __name__ == "__main__":
+def add_new_chats():
     queries = [
         "to:me from:philrha@gmail.com after:2016/01/01 label:chats",
         "from:me to:philrha@gmail.com after:2016/01/01 label:chats",
     ]
 
     for q in queries:
-        add_chats(q)
+        add(q)
