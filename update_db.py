@@ -7,5 +7,10 @@ if __name__ == "__main__":
     and consolidate into the Text table for easy
     full text search
     """
-    add_new_chats()
+    queries = [
+        "to:me from:<email_address> after:2012/01/01 before:2013/01/01 label:chats",
+        "from:me to:<email_address> after:2012/01/01 before:2013/01/01 label:chats",
+    ]
+
+    add_new_chats(queries)
     consolidate_text()

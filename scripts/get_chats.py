@@ -21,10 +21,15 @@ CHUNK_SIZE = 200
 
 def get_message_ids(q):
 
+    print("finding new message ids...")
+
     try:
         response = service.users().messages().list(userId='me', q=q).execute()
     except errors.HttpError as error:
         print("An error occurred: {}".format(error))
+
+    if not response.get('messages'):
+        return
 
     messages = [msg for msg in response.get('messages')]
 
@@ -59,15 +64,24 @@ def commit_messages():
 
 
 def add(query):
-    print "hi"
     message_ids = get_message_ids(query)
 
+    if not message_ids:
+        print("no new messages found.")
+        return
+
+    print("adding messages...")
     for i, msg_id in enumerate(message_ids):
         response = service.users().messages().get(userId='me',
                                                   id=msg_id,
                                                   format='full').execute()
         data = json.dumps(response)
-        thread_id = response['thread_id']
+
+        thread_id = response.get('thread_id') or response.get('threadId')
+        if not thread_id:
+            print("No thread_id found for {}".format(msg_id))
+            continue
+
         encoded_text = response['payload']['body']['data'].encode('utf-8')
         text = base64.urlsafe_b64decode(encoded_text)
         send_time = response['internalDate']
@@ -100,11 +114,6 @@ def add(query):
     print("finished query. {} new chats.".format(len(message_ids)))
 
 
-def add_new_chats():
-    queries = [
-        "to:me from:philrha@gmail.com after:2016/01/01 label:chats",
-        "from:me to:philrha@gmail.com after:2016/01/01 label:chats",
-    ]
-
+def add_new_chats(queries):
     for q in queries:
         add(q)
